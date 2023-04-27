@@ -16,15 +16,16 @@ class Data:
         top_games = filtered_games.nlargest(10, 'average')
         return top_games
 
-    def get_game_info(self, game_name):
-        game_row = self.data.loc[self.data['name'] == game_name]
-        print(game_row)
-        if game_row.empty:
-            return None
-        game_description = game_row['description'].values[0]
-        return game_description
+    def get_game_info(self, game_idx, top_games):
+        game_idx -= 1
+        if 0 <= game_idx < len(top_games):
+            game_name = top_games["name"].iloc[game_idx]
+            game_description = top_games['description'].iloc[game_idx]
+            return game_name, game_description
+        else:
+            return None, None
 
-        # Create an instance of the Data class
+
 
     def find_min(self):
         min_play = min(self.data["minplayers"])
