@@ -1,7 +1,9 @@
 import time
 import tkinter as tk
+import tkinter.font as tkFont
 from tkinter import ttk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 from Data import Data
 
 
@@ -10,41 +12,47 @@ class App(ttk.Frame):
         super().__init__(parent, padding="3 3 12 12")
         self.data = Data('boardgames1.csv')
         self.style = ttk.Style()
-        self.style.theme_use("alt")
+        self.style.theme_use("aqua")
         parent.rowconfigure(0, weight=1)
         parent.columnconfigure(0, weight=1)
         self.grid(row=0, column=0, sticky="NEWS")
+
+
+        self.custom_font = tkFont.Font(family="Arial", size=18)
+
         self.load_widget()
 
     def load_widget(self):
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=2)  # Increase the weight of the second row
-        self.rowconfigure(2, weight=0)
+        self.rowconfigure(1, weight=0)
         self.columnconfigure(0, weight=1)
 
-        self.load1 = ttk.LabelFrame(self, text="  Begin the website  ")
+        image = Image.open("/Users/navathonlimamapar/Desktop/Recommender_board_game/wp3748776-board-game-wallpapers.jpg")
+        self.bg_image = ImageTk.PhotoImage(image)
+        bg_width, bg_height = image.size  # Get the background image dimensions
+
+        self.load1 = tk.Canvas(self, width=bg_width, height=bg_height, borderwidth=0, highlightthickness=0)
         self.load1.grid(row=0, column=0, sticky="news", padx=5, pady=5)
         self.load1.rowconfigure(0, weight=1)
-        self.load1.rowconfigure(1, weight=1)
         self.load1.columnconfigure(0, weight=1)
 
+        self.grid(row=0, column=0, sticky="NEWS")
+
+        background_label = self.load1.create_image(0, 0, anchor='nw', image=self.bg_image)
+
         self.bar1 = ttk.Progressbar(self.load1, length=500, mode="determinate")
-        self.status1 = ttk.Label(self.load1, text="")
-        self.start1 = ttk.Button(self.load1, text="Start", command=self.run_load1)
-        self.bar1.grid(row=0, column=0, sticky="sew", padx=10)
-        self.status1.grid(row=1, column=0, sticky="wn", padx=10)
-        self.start1.grid(row=0, column=1, rowspan=2, padx=10, pady=10, sticky="news")
+        self.status1 = ttk.Label(self.load1, text="", font=self.custom_font)
 
-        self.quit = ttk.Button(self, text="Quit", command=root.destroy)
-        self.quit.grid(row=2, column=0, padx=5, pady=5, sticky="se")
+        self.start1 = ttk.Button(self.load1, text="Start", command=self.begin_load1)
 
-    def run_load1(self):
-        print('Running Program')
-        self.begin_load1()
+        self.bar1.grid(in_=self.load1, row=0, column=0, sticky="s", padx=10, pady=20)
+        self.start1.grid(in_=self.load1, row=2, column=0, padx=10, pady=10, sticky="se")
+        self.quit = ttk.Button(self.load1, text="Quit", command=root.destroy)
+        self.quit.grid(in_=self.load1, row=2, column=0, padx=5, pady=5, sticky="sw")
+
 
     def begin_load1(self):
         self.start1.config(state="disabled")
-        self.status1.config(text="Running...")
         self.after(10, lambda: self.load1_running(0))
 
     def load1_success(self):
@@ -53,7 +61,7 @@ class App(ttk.Frame):
         self.load_widget2()
 
     def load1_running(self, step):
-        time.sleep(0.1)
+
         self.bar1.config(value=step)
         if step < 100:
             self.after(10, lambda: self.load1_running(step + 10))
@@ -62,21 +70,21 @@ class App(ttk.Frame):
 
     def load_widget2(self):
         self.load1.grid_forget()
-        self.load2 = ttk.LabelFrame(self, text="   Find out the best board games for you!   ")
+        self.load2 = ttk.LabelFrame(self, text="   FIND OUT THE BEST BOARD GAMES FOR YOU!   ")
         self.load2.grid(row=0, column=0, padx=5, pady=5, sticky="news")
 
         self.load2.rowconfigure(0, weight=1)
         self.load2.rowconfigure(1, weight=1)
 
-        input_labels = ["MinPlayer", "MaxPlayer", "MinAge", "MinPlaytime", "MaxPlaytime"]
+        input_labels = ["Minimum Player", "Maximum Player", "Minimun Age", "Minimum Playtime", "Maximum Playtime"]
         input_widgets = []
 
         for idx, label_text in enumerate(input_labels):
-            self.load2.columnconfigure(idx, weight=1)  # Add this line
+            self.load2.columnconfigure(idx, weight=1)  
             label = ttk.Label(self.load2, text=label_text)
             label.grid(row=0, column=idx, padx=5, pady=5, sticky="we")
             entry = ttk.Entry(self.load2)
-            entry.grid(row=1, column=idx, padx=5, pady=5, sticky="ew")  # Change "we" to "ew"
+            entry.grid(row=1, column=idx, padx=5, pady=5, sticky="ew") 
             input_widgets.append(entry)
 
         self.min_play, self.max_play, self.min_age, self.min_playtime, self.max_playtime = input_widgets
@@ -84,12 +92,12 @@ class App(ttk.Frame):
         self.search_button = ttk.Button(self.load2, text="Search", command=self.display_top_10)
         self.search_button.grid(row=3, column=2, padx=5, pady=5, sticky="s")
 
-
-
-        self.results = ttk.LabelFrame(self, text="   Top 10 Games   ")
+        self.results = ttk.LabelFrame(self, text="   TOP 10 GAMES RECOMMEND FOR YOU   ")
         self.results.grid(row=1, column=0, padx=5, pady=5, sticky="news")
 
         self.quit.grid_configure(sticky="se")
+
+
 
     def display_top_10(self):
         try:
@@ -104,20 +112,19 @@ class App(ttk.Frame):
             # Clear existing results
             for widget in self.results.winfo_children():
                 widget.destroy()
-
-            for idx, label_text in enumerate(self.top_games['name']):
-                label2 = ttk.Label(self.results, text=f"{idx + 1}. {label_text}")
-                label2.grid(row=idx, column=0, padx=5, pady=5, sticky="w")
+            
+            if self.top_games.shape[0] == 0:
+                messagebox.showinfo("No Matching Games", "No games match your criteria. Please adjust your preferences and try again.")
+            else:
+                for idx, label_text in enumerate(self.top_games['name']):
+                    label2 = ttk.Label(self.results, text=f"{idx + 1}. {label_text}")
+                    label2.grid(row=idx, column=0, padx=5, pady=5, sticky="w")
 
             # Add entry and button for user to input index and show description
             self.idx_entry = ttk.Entry(self.results)
             self.idx_entry.grid(row=10, column=0, padx=5, pady=5, sticky="w")
             self.description_button = ttk.Button(self.results, text="Show Description", command=self.show_description)
-            self.description_button.grid(row=10, column=1, padx=5, pady=5, sticky="w")
-
-            # Add a Text widget for displaying game description
-            self.description_text = tk.Text(self.results, wrap=tk.WORD, width=50, height=10)
-            self.description_text.grid(row=11, column=0, columnspan=2, padx=5, pady=5, sticky="w")
+            self.description_button.grid(row=10, column=1, padx=5, pady=5, sticky="s")
 
         except:
             label3 = ttk.Label(self.load2, text="Invalid please retry")
@@ -128,8 +135,6 @@ class App(ttk.Frame):
             index = int(self.idx_entry.get())
             if 1 <= index <= 10:
                 game_name, description = self.data.get_game_info(index, self.top_games)
-                self.description_text.delete(1.0, tk.END)
-                self.description_text.insert(tk.END, description)
 
                 # Create a Toplevel window for the description
                 description_window = tk.Toplevel(root)
@@ -145,6 +150,8 @@ class App(ttk.Frame):
             messagebox.showerror("Invalid Input", "Please enter a valid number between 1 and 10.")
         except Exception as e:
             messagebox.showerror("Error", str(e))
+
+
 
 
 if __name__ == '__main__':
