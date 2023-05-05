@@ -16,10 +16,7 @@ class App(ttk.Frame):
         parent.rowconfigure(0, weight=1)
         parent.columnconfigure(0, weight=1)
         self.grid(row=0, column=0, sticky="NEWS")
-
-
         self.custom_font = tkFont.Font(family="Arial", size=18)
-
         self.load_widget()
 
     def load_widget(self):
@@ -50,7 +47,6 @@ class App(ttk.Frame):
         self.quit = ttk.Button(self.load1, text="Quit", command=root.destroy)
         self.quit.grid(in_=self.load1, row=2, column=0, padx=5, pady=5, sticky="sw")
 
-
     def begin_load1(self):
         self.start1.config(state="disabled")
         self.after(10, lambda: self.load1_running(0))
@@ -61,7 +57,6 @@ class App(ttk.Frame):
         self.load_widget2()
 
     def load1_running(self, step):
-
         self.bar1.config(value=step)
         if step < 100:
             self.after(10, lambda: self.load1_running(step + 10))
@@ -72,7 +67,7 @@ class App(ttk.Frame):
         self.load1.grid_forget()
         self.load2 = ttk.LabelFrame(self, text="   FIND OUT THE BEST BOARD GAMES FOR YOU!   ")
         self.load2.grid(row=0, column=0, padx=5, pady=5, sticky="news")
-
+        
         self.load2.rowconfigure(0, weight=1)
         self.load2.rowconfigure(1, weight=1)
 
@@ -92,15 +87,69 @@ class App(ttk.Frame):
         self.search_button = ttk.Button(self.load2, text="Search", command=self.display_top_10)
         self.search_button.grid(row=3, column=2, padx=5, pady=5, sticky="s")
 
-        self.results = ttk.LabelFrame(self, text="   TOP 10 GAMES RECOMMEND FOR YOU   ")
+        self.results = ttk.LabelFrame(self, text="   TOP 30 GAMES BY AVERAGE   ")
         self.results.grid(row=1, column=0, padx=5, pady=5, sticky="news")
 
-        self.quit.grid_configure(sticky="se")
+        self.display_average()
 
+    def display_chunk(self, start_idx):
+        for idx, label_text in enumerate(self.top_games['name'][start_idx:start_idx+10]):
+            label2 = ttk.Label(self.results, text=f"{start_idx + idx + 1}. {label_text}")
+            label2.grid(row=idx+1, column=0, padx=5, pady=5, sticky="w")
 
+    def reset_layout(self):
+        # Clear existing results
+        for widget in self.results.winfo_children():
+            widget.destroy()
+        # Remove any remaining widgets from the self.results LabelFrame
+        self.idx_entry = None
+        self.description_button = None
+        self.back_to_30 = None
+        self.display_average()
+
+    def display_average(self):
+        self.results.config(text="   TOP 30 GAMES BY AVERAGE   ")
+        self.top_games = self.data.get_top_by_average(n=30)
+        self.current_page = 0
+        self.display_chunk(self.current_page * 10)
+
+        # Create a separate frame for navigation buttons
+        self.navigation_frame = ttk.Frame(self.results)
+        self.navigation_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ne")
+
+        # Configure the column weight for self.results
+        self.results.columnconfigure(0, weight=1)
+        self.results.columnconfigure(1, weight=0)  # Set the second column weight to 0
+
+        # Add Next and Previous buttons
+        self.prev_button = ttk.Button(self.navigation_frame, text="<",width=3,command=self.prev_chunk)
+        self.prev_button.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        self.next_button = ttk.Button(self.navigation_frame, text=">",width=3, command=self.next_chunk)
+        self.next_button.grid(row=0, column=1, padx=5, pady=5, sticky="e")
+
+        # Move the Quit button to the bottom center
+        self.quit = ttk.Button(self.results, text="Quit", command=root.destroy)
+        self.quit.grid(row=11, column=2, padx=5, pady=5, sticky="s")
+
+    def next_chunk(self):
+        if self.current_page < 2:
+            self.current_page += 1
+            for widget in self.results.winfo_children():
+                if isinstance(widget, ttk.Label):
+                    widget.destroy()
+            self.display_chunk(self.current_page * 10)
+
+    def prev_chunk(self):
+        if self.current_page > 0:
+            self.current_page -= 1
+            for widget in self.results.winfo_children():
+                if isinstance(widget, ttk.Label):
+                    widget.destroy()
+            self.display_chunk(self.current_page * 10)
 
     def display_top_10(self):
         try:
+            self.results.config(text="   TOP 10 GAMES RECOMMEND FOR YOU   ")
             min_players = int(self.min_play.get())
             max_player = int(self.max_play.get())
             min_age = int(self.min_age.get())
@@ -125,6 +174,11 @@ class App(ttk.Frame):
             self.idx_entry.grid(row=10, column=0, padx=5, pady=5, sticky="w")
             self.description_button = ttk.Button(self.results, text="Show Description", command=self.show_description)
             self.description_button.grid(row=10, column=1, padx=5, pady=5, sticky="s")
+
+            self.back_to_30 = ttk.Button(self.results, text="Back", command=self.reset_layout)
+            self.back_to_30.grid(row=11, column=0, padx=5, pady=5, sticky="sw")  # Change the sticky option to "sw"
+            self.quit_10 = ttk.Button(self.results, text="Quit", command=root.destroy)
+            self.quit_10.grid(row=11, column=1, padx=5, pady=5, sticky="s")  # Change the sticky option to "sw"
 
         except:
             label3 = ttk.Label(self.load2, text="Invalid please retry")
