@@ -5,12 +5,23 @@ from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from Data import Data
+from Graph import Graph
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+import pandas as pd
+import numpy as np
+import seaborn as sns
+
+
+
 
 
 class App(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent, padding="3 3 12 12")
-        self.data = Data('boardgames1.csv')
+        self.data = Data('./boardgames1.csv')
+        self.graph = Graph('./boardgames1.csv')
         self.style = ttk.Style()
         self.style.theme_use("aqua")
         parent.rowconfigure(0, weight=1)
@@ -24,7 +35,8 @@ class App(ttk.Frame):
         self.rowconfigure(1, weight=0)
         self.columnconfigure(0, weight=1)
 
-        image = Image.open("/Users/navathonlimamapar/Desktop/Recommender_board_game/wp3748776-board-game-wallpapers.jpg")
+        image = Image.open("./wp3748776-board-game-wallpapers.jpg")
+
         self.bg_image = ImageTk.PhotoImage(image)
         bg_width, bg_height = image.size  # Get the background image dimensions
 
@@ -89,6 +101,9 @@ class App(ttk.Frame):
 
         self.results = ttk.LabelFrame(self, text="   TOP 30 GAMES BY AVERAGE   ")
         self.results.grid(row=1, column=0, padx=5, pady=5, sticky="news")
+        self.graph_button = ttk.Button(self.load2, text="Graph", command=self.display_graphs)
+        self.graph_button.grid(row=3, column=1, padx=5, pady=5, sticky="s")
+
 
         self.display_average()
 
@@ -205,6 +220,68 @@ class App(ttk.Frame):
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
+    def back_to_search_page(self):
+        self.graphs_frame.grid_forget()
+        self.load2.grid(row=0, column=0, padx=5, pady=5, sticky="news")
+
+    def display_graphs(self):
+        # Hide the search widget and results
+        self.load2.grid_forget()
+        self.results.grid_forget()
+
+        # Create a new LabelFrame to hold the graphs
+        self.graphs_frame = ttk.LabelFrame(self, text="   GRAPHS   ")
+        self.graphs_frame.grid(row=0, column=0, padx=5, pady=5, sticky="news")
+
+        # Create a figure and axes instance
+        self.fig = Figure(figsize=(5, 4))
+        self.ax = self.fig.add_subplot()
+
+        self.fig_canvas = FigureCanvasTkAgg(self.fig, master=self.graphs_frame)
+        self.fig_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="news")
+        self.fig_canvas.draw()
+
+        # Create buttons to display different graphs
+        box_button = ttk.Button(self.graphs_frame, text="Box Plot", command=self.show_boxplot)
+        box_button.grid(row=1, column=0, padx=5, pady=5, sticky="news")
+
+        hist_button = ttk.Button(self.graphs_frame, text="Histogram", command=self.show_histogram)
+        hist_button.grid(row=1, column=1, padx=5, pady=5, sticky="news")
+
+        scatter_button = ttk.Button(self.graphs_frame, text="Scatter Plot", command=self.show_scatterplot)
+        scatter_button.grid(row=1, column=2, padx=5, pady=5, sticky="news")
+
+        # Add a back button to return to the search page
+        back_button = ttk.Button(self.graphs_frame, text="Back", command=self.back_to_search_page)
+        back_button.grid(row=2, column=0, padx=5, pady=5, sticky="news")
+
+    def show_histogram(self):
+        self.graph.create_histogram(self.fig, self.ax)
+        self.fig_canvas.draw()
+
+    def show_boxplot(self):
+        self.graph.create_boxplot(self.fig, self.ax)
+        self.fig_canvas.draw()
+
+    def show_scatterplot(self):
+        self.graph.create_scatterplot(self.fig, self.ax)
+        self.fig_canvas.draw()
+
+
+    def back_to_search_page(self):
+        self.graphs_frame.grid_forget()
+        self.load2.grid(row=0, column=0, padx=5, pady=5, sticky="news")
+        self.results.grid(row=1, column=0, padx=5, pady=5, sticky="news")
+
+
+
+
+
+
+
+
+
+    
 
 
 
