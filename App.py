@@ -1,17 +1,11 @@
-import time
 import tkinter as tk
 import tkinter.font as tkFont
-from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from Data import Data
 from Graph import Graph
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-import pandas as pd
-import numpy as np
-import seaborn as sns
 from tkinter import ttk, PhotoImage
 
 
@@ -126,6 +120,9 @@ class App(ttk.Frame):
         self.graph_button.grid(row=3, column=4, padx=5, pady=5, sticky="se")
         self.quit = ttk.Button(self.master, text="Quit", command=root.destroy)
         self.quit.place(x=355, y=780)
+        self.clear_button = ttk.Button(self.load2, text="Clear", command=self.clear_inputs)
+        self.clear_button.grid(row=3, column=0, padx=5, pady=5, sticky="sw")
+
 
         self.display_average()
 
@@ -186,6 +183,14 @@ class App(ttk.Frame):
                 if isinstance(widget, ttk.Label):
                     widget.destroy()
             self.display_chunk(self.current_page * 10)
+
+    def clear_inputs(self):
+        self.min_play.delete(0, 'end')
+        self.max_play.delete(0, 'end')
+        self.min_age.delete(0, 'end')
+        self.min_playtime.delete(0, 'end')
+        self.max_playtime.delete(0, 'end')
+
 
     def display_top_10(self):
         try:

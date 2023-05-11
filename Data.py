@@ -24,13 +24,10 @@ class Data:
             return game_name, game_description
         else:
             return None, None
-    
+
     def get_top_by_average(self, n=30):
         top_games = self.data.nlargest(n, 'average')
         return top_games
-
-
-
 
     def find_min(self):
         min_play = min(self.data["minplayers"])
