@@ -12,6 +12,7 @@ from matplotlib.figure import Figure
 import pandas as pd
 import numpy as np
 import seaborn as sns
+from tkinter import ttk, PhotoImage
 
 
 class App(ttk.Frame):
@@ -22,11 +23,20 @@ class App(ttk.Frame):
         self.style = ttk.Style()
         self.style.theme_use("alt")
 
+        # Load the background image
+        self.background_image = PhotoImage(file="C:\\Users\Win10\Desktop\Recommender_board_game\gradient (1).png")
+
+        # Create a label with the image
+        self.background_label = ttk.Label(self, image=self.background_image)
+
+        # Place the label in the background
+        self.background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
         # Adjust colors to match Apple Music's classic theme
         self.style.configure(".", background="#FFC1C1", foreground="#000000")
         self.style.configure("TButton", background="#FFFFFF", foreground="#000000", bordercolor="#FFFFFF")
         self.style.configure("TLabel", background="#FFC1C1", foreground="#000000")
-        self.style.configure("TEntry", background="#FFFFFF", foreground="#FFC1C1")
+        self.style.configure("TEntry", background="#FFFFFF", foreground="#000000")
         self.style.configure("TFrame", background="#FFC1C1", foreground="#000000")
         self.style.configure("TLabelFrame", background="#FFC1C1", foreground="#000000")
 
@@ -38,6 +48,7 @@ class App(ttk.Frame):
         self.grid(row=0, column=0, sticky="NEWS")
         # self.custom_font = tkFont.Font(family="Arial", size=18)
         self.load_widget()
+
 
     def load_widget(self):
         self.rowconfigure(0, weight=1)
