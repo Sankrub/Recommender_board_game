@@ -342,24 +342,28 @@ class App(ttk.Frame):
         self.graphs_frame.columnconfigure(0, weight=1, minsize=100)
         self.graphs_frame.columnconfigure(1, weight=1, minsize=100)
         self.graphs_frame.columnconfigure(2, weight=1, minsize=100)
-        self.fig = Figure(figsize=(5, 4))
+        self.graphs_frame.columnconfigure(3, weight=1, minsize=100)
+        self.fig = Figure(figsize=(15, 5))
         self.ax = self.fig.add_subplot()
         self.fig_canvas = FigureCanvasTkAgg(self.fig, master=self.graphs_frame)
-        self.fig_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="news", columnspan=3)
+        self.fig_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="news", columnspan=4)
         self.fig_canvas.draw()
 
         # Create buttons to display different graphs
+        bar_chart_button = ttk.Button(self.graphs_frame, text="Bar Chart", command=self.show_bar_chart)
+        bar_chart_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+
         box_button = ttk.Button(self.graphs_frame, text="Box Plot", command=self.show_boxplot)
-        box_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        box_button.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
         hist_button = ttk.Button(self.graphs_frame, text="Histogram", command=self.show_histogram)
-        hist_button.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+        hist_button.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
 
         scatter_button = ttk.Button(self.graphs_frame, text="Scatter Plot", command=self.show_scatterplot)
-        scatter_button.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
+        scatter_button.grid(row=1, column=3, padx=5, pady=5, sticky="ew")
 
         back_button = ttk.Button(self.graphs_frame, text="Back", command=self.back_to_search_page)
-        back_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew", columnspan=3)
+        back_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew", columnspan=4)
 
     # from Graph class
     def show_histogram(self):
@@ -384,4 +388,13 @@ class App(ttk.Frame):
         :return:
         """
         self.graph.create_scatterplot(self.fig, self.ax)
+        self.fig_canvas.draw()
+
+
+    def show_bar_chart(self):
+        """
+        Bar chart graph base on artist game count
+        :return:
+        """
+        self.graph.create_bar_chart(self.fig, self.ax)
         self.fig_canvas.draw()
