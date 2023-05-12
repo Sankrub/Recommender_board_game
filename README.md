@@ -3,17 +3,24 @@
 ## Description
 This application is designed to recommend board games based on user preferences. It takes in a range of desired player count, age, and playtime, then recommends the top 10 games fitting those criteria. It can also provide the top 30 games based on average rating, irrespective of the user's preferences.
 
-The core logic of the recommendation is built on a `Data` class that handles data filtering and ranking. Additionally, a `Graph` class is used for data visualization.
+## Class responsible
+1.App Class: This is the main application class that initializes the GUI and handles user interactions. The application features a user-friendly interface where users can input their preferences, and the system provides game recommendations accordingly. It also provides options for the user to visualize different aspects of the game data.
 
+2.Data Class: This class is responsible for loading, filtering, and processing the game data from a CSV file. It utilizes pandas to perform data manipulation tasks such as filtering games based on user input and fetching game details.
+
+3.Graph Class: This class is responsible for creating different types of visualizations (histogram, boxplot, scatterplot, bar chart) based on the game data. It uses seaborn and matplotlib libraries for creating these visualizations.
 ### First page
 ![First page](C:\Users\Win10\Desktop\Recommender_board_game\begin_page.jpg)
 ### Second page
 ![Second_page](C:\Users\Win10\Desktop\Recommender_board_game\DisplayandInput_page.jpg)
+### Show description in message box
+![Description](C:\Users\Win10\Desktop\Recommender_board_game\show_descrip.jpg)
 ### Graph page
 ![Graph page](C:\Users\Win10\Desktop\Recommender_board_game\graph_page.jpg)
-
-[Link to Demonstration Video](https://your-video-link.com)
-
+### Youtube
+[Link to Demonstration Video](https://youtu.be/OWciqqhSyDY)
+### Collab
+[Link to Collab](https://colab.research.google.com/drive/12rfFFbjrDwmkwoZ3O9sEsIG2XeIuCg70?usp=sharing)
 ## Data Sources
 The application uses a CSV file as its primary data source. This CSV file, `boardgames1.csv`, contains a comprehensive list of board games along with various attributes such as minimum players, maximum players, minimum age, minimum playtime, maximum playtime, and average rating.
 
