@@ -6,6 +6,15 @@ class Data:
         self.data = pd.read_csv(csv_name)
 
     def get_top_recommendations(self, min_players, max_players, min_age, min_playtime, max_playtime):
+        """
+        Get top 10 games from user input
+        :param min_players: minimum player int
+        :param max_players: maximum player int
+        :param min_age: minimum age int
+        :param min_playtime: minimum play time int
+        :param max_playtime: maximum play time int
+        :return:
+        """
         filtered_games = self.data[
             (self.data['minplayers'] <= min_players) &
             (self.data['maxplayers'] >= max_players) &
@@ -17,6 +26,12 @@ class Data:
         return top_games
 
     def get_game_info(self, game_idx, top_games):
+        """
+        get game description by there index
+        :param game_idx: games index
+        :param top_games: list of the games
+        :return: game name and description
+        """
         game_idx -= 1
         if 0 <= game_idx < len(top_games):
             game_name = top_games["name"].iloc[game_idx]
@@ -26,18 +41,13 @@ class Data:
             return None, None
 
     def get_top_by_average(self, n=30):
+        """
+        Find top 30 games by there average
+        :param n: number of games want to find default 30
+        :return: list of 30 games
+        """
         top_games = self.data.nlargest(n, 'average')
         return top_games
-
-    def find_min(self):
-        min_play = min(self.data["minplayers"])
-        max_play = max(self.data["minplayers"])
-        return min_play, max_play
-
-    def find_max(self):
-        min_play = min(self.data["maxplayers"])
-        max_play = max(self.data["maxplayers"])
-        return min_play, max_play
 
 
 data = Data('boardgames1.csv')
