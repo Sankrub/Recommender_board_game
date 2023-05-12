@@ -42,26 +42,4 @@ class Data:
 
 data = Data('boardgames1.csv')
 
-# Get top recommendations based on user-defined criteria
-# min_players = 3
-# max_players = 50
-# min_age = 7
-# min_playtime = 10
-# max_playtime = 120
 
-# top_recommendations = data.get_top_recommendations(min_players, max_players, min_age, min_playtime, max_playtime)
-# print(top_recommendations)
-# for index, game_name in enumerate(top_recommendations['name']):
-#     print(f"{index + 1}. {game_name}")
-
-# game_name = 'Gloomhaven'
-# game_des = data.get_game_info(game_name)
-# print(game_des)
-
-# one, two = data.find_max()
-# print(one, two)
-
-top_30_games = data.get_top_by_average()
-print(top_30_games)
-for index, game_name in enumerate(top_30_games['name']):
-    print(f"{index + 1}. {game_name}")

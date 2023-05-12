@@ -1,13 +1,9 @@
-from Data import Data
-from App import App
 import tkinter as tk
-from tkinter import ttk
-
+from App import App
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.title("Board game recommender")
-    csv_name = 'boardgames1.csv'
-    data = Data(csv_name)
+    root.geometry("800x810")
     app = App(root)
     root.mainloop()

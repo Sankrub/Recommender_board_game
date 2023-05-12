@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 class Graph:
@@ -25,7 +24,6 @@ class Graph:
         ax.set_xlabel('Minimum Age')
         ax.set_ylabel('Average Rating')
         ax.set_title('Scatterplot of Average Rating vs Minimum Age')
-
 
     def get_histogram_data(self):
         return self.data['average']

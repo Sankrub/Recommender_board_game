@@ -16,62 +16,42 @@ class App(ttk.Frame):
         self.graph = Graph('./boardgames1.csv')
         self.style = ttk.Style()
         self.style.theme_use("alt")
-
-        # Load the background image
         self.background_image = PhotoImage(file="C:\\Users\Win10\Desktop\Recommender_board_game\gradient (1).png")
-
-        # Create a label with the image
         self.background_label = ttk.Label(self, image=self.background_image)
-
-        # Place the label in the background
         self.background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-        # Adjust colors to match Apple Music's classic theme
+        # theme color
         self.style.configure(".", background="#FFC1C1", foreground="#000000")
         self.style.configure("TButton", background="#FFFFFF", foreground="#000000", bordercolor="#FFFFFF")
         self.style.configure("TLabel", background="#FFC1C1", foreground="#000000")
         self.style.configure("TEntry", background="#FFFFFF", foreground="#000000")
         self.style.configure("TFrame", background="#FFC1C1", foreground="#000000")
         self.style.configure("TLabelFrame", background="#FFC1C1", foreground="#000000")
-
-        # Adjust the font to match Apple Music's theme
         self.custom_font = tkFont.Font(family="SF Pro Display", size=18)
-
         parent.rowconfigure(0, weight=1)
         parent.columnconfigure(0, weight=1)
         self.grid(row=0, column=0, sticky="NEWS")
-        # self.custom_font = tkFont.Font(family="Arial", size=18)
         self.load_widget()
-
 
     def load_widget(self):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=0)
         self.columnconfigure(0, weight=1)
-
         image = Image.open("./wp3748776-board-game-wallpapers.jpg")
-
         self.bg_image = ImageTk.PhotoImage(image)
-        bg_width, bg_height = image.size  # Get the background image dimensions
-
+        bg_width, bg_height = image.size
         self.load1 = tk.Canvas(self, width=bg_width, height=bg_height, borderwidth=0, highlightthickness=0)
         self.load1.grid(row=0, column=0, sticky="news", padx=5, pady=5)
         self.load1.rowconfigure(0, weight=1)
         self.load1.columnconfigure(0, weight=1)
-
         self.grid(row=0, column=0, sticky="NEWS")
-
         background_label = self.load1.create_image(0, 0, anchor='nw', image=self.bg_image)
-
         self.bar1 = ttk.Progressbar(self.load1, length=500, mode="determinate")
         self.status1 = ttk.Label(self.load1, text="", font=self.custom_font)
-
         self.start1 = ttk.Button(self.load1, text="Start", command=self.begin_load1)
-
         self.bar1.grid(in_=self.load1, row=0, column=0, sticky="s", padx=10, pady=20)
         self.start1.grid(in_=self.load1, row=2, column=0, padx=10, pady=10, sticky="se")
-        self.quit = ttk.Button(self.load1, text="Quit", command=root.destroy)
-
+        self.quit = ttk.Button(self.load1, text="Quit", command=self.master.destroy)
         self.quit.grid(in_=self.load1, row=2, column=0, padx=5, pady=5, sticky="sw")
 
     def begin_load1(self):
@@ -98,7 +78,7 @@ class App(ttk.Frame):
         self.load2.rowconfigure(0, weight=1)
         self.load2.rowconfigure(1, weight=1)
 
-        input_labels = ["Minimum Player", "Maximum Player", "Minimun Age", "Minimum Playtime", "Maximum Playtime"]
+        input_labels = ["Minimum Player", "Maximum Player", "Minimum Age", "Minimum Playtime", "Maximum Playtime"]
         input_widgets = []
 
         for idx, label_text in enumerate(input_labels):
@@ -118,11 +98,10 @@ class App(ttk.Frame):
         self.results.grid(row=1, column=0, padx=5, pady=5, sticky="news")
         self.graph_button = ttk.Button(self.load2, text="Display Graph", command=self.display_graphs)
         self.graph_button.grid(row=3, column=4, padx=5, pady=5, sticky="se")
-        self.quit = ttk.Button(self.master, text="Quit", command=root.destroy)
+        self.quit = ttk.Button(self.master, text="Quit", command=self.master.destroy)
         self.quit.place(x=355, y=780)
         self.clear_button = ttk.Button(self.load2, text="Clear", command=self.clear_inputs)
         self.clear_button.grid(row=3, column=0, padx=5, pady=5, sticky="sw")
-
 
         self.display_average()
 
@@ -132,10 +111,9 @@ class App(ttk.Frame):
             label2.grid(row=idx, column=0, padx=5, pady=5, sticky="w")
 
     def reset_layout(self):
-        # Clear existing results
         for widget in self.results.winfo_children():
             widget.destroy()
-        # Remove any remaining widgets from the self.results LabelFrame
+
         self.idx_entry = None
         self.description_button = None
         self.back_to_30 = None
@@ -147,13 +125,13 @@ class App(ttk.Frame):
         self.current_page = 0
         self.display_chunk(self.current_page * 10)
 
-        # Create a separate frame for navigation buttons
+        # separate frame for  buttons
         self.navigation_frame = ttk.Frame(self.results)
         self.navigation_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ne")
 
         # Configure the column weight for self.results
         self.results.columnconfigure(0, weight=1)
-        self.results.columnconfigure(1, weight=0)  # Set the second column weight to 0
+        self.results.columnconfigure(1, weight=0)
 
         # Add Next and Previous buttons
         self.prev_button = ttk.Button(self.navigation_frame, text="<", width=3, command=self.prev_chunk)
@@ -191,7 +169,6 @@ class App(ttk.Frame):
         self.min_playtime.delete(0, 'end')
         self.max_playtime.delete(0, 'end')
 
-
     def display_top_10(self):
         try:
             self.results.config(text="   TOP 10 GAMES RECOMMEND FOR YOU   ")
@@ -203,8 +180,6 @@ class App(ttk.Frame):
 
             self.top_games = self.data.get_top_recommendations(min_players, max_player, min_age, min_playtime,
                                                                max_playtime)
-
-            # Clear existing results
             for widget in self.results.winfo_children():
                 widget.destroy()
 
@@ -223,9 +198,8 @@ class App(ttk.Frame):
             self.description_button.grid(row=10, column=1, padx=5, pady=5, sticky="s")
 
             self.back_to_30 = ttk.Button(self.results, text="Back", command=self.reset_layout)
-            self.back_to_30.grid(row=11, column=0, padx=5, pady=5, sticky="sw")  # Change the sticky option to "sw"
-            # self.quit_10 = ttk.Button(self.results, text="Quit", command=root.destroy)
-            # self.quit_10.grid(row=11, column=1, padx=5, pady=5, sticky="s")  # Change the sticky option to "sw"
+            self.back_to_30.grid(row=11, column=0, padx=5, pady=5, sticky="sw")
+
 
         except:
             label3 = ttk.Label(self.load2, text="Invalid please retry")
@@ -238,7 +212,7 @@ class App(ttk.Frame):
                 game_name, description = self.data.get_game_info(index, self.top_games)
 
                 # Create a Toplevel window for the description
-                description_window = tk.Toplevel(root)
+                description_window = tk.Toplevel(self.master)
                 description_window.title(f"Description for {game_name}")
                 description_window.geometry("600x400")
 
@@ -259,7 +233,7 @@ class App(ttk.Frame):
                 game_name, description = self.data.get_game_info(index, self.top_games)
 
                 # Create a Toplevel window for the description
-                description_window = tk.Toplevel(root)
+                description_window = tk.Toplevel(self.master)
                 description_window.title(f"Description for {game_name}")
                 description_window.geometry("600x400")
 
@@ -279,21 +253,15 @@ class App(ttk.Frame):
         self.results.grid(row=1, column=0, padx=5, pady=5, sticky="news")
 
     def display_graphs(self):
-        # Hide the search widget and results
         self.load2.grid_forget()
         self.results.grid_forget()
-
-        # Create a new LabelFrame to hold the graphs
         self.graphs_frame = ttk.LabelFrame(self, text="   GRAPHS   ")
         self.graphs_frame.grid(row=0, column=0, padx=5, pady=5, sticky="news")
         self.graphs_frame.columnconfigure(0, weight=1, minsize=100)
         self.graphs_frame.columnconfigure(1, weight=1, minsize=100)
         self.graphs_frame.columnconfigure(2, weight=1, minsize=100)
-
-        # Create a figure and axes instance
         self.fig = Figure(figsize=(5, 4))
         self.ax = self.fig.add_subplot()
-
         self.fig_canvas = FigureCanvasTkAgg(self.fig, master=self.graphs_frame)
         self.fig_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="news", columnspan=3)
         self.fig_canvas.draw()
@@ -308,7 +276,6 @@ class App(ttk.Frame):
         scatter_button = ttk.Button(self.graphs_frame, text="Scatter Plot", command=self.show_scatterplot)
         scatter_button.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
 
-        # Add a back button to return to the search page
         back_button = ttk.Button(self.graphs_frame, text="Back", command=self.back_to_search_page)
         back_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew", columnspan=3)
 
@@ -323,12 +290,3 @@ class App(ttk.Frame):
     def show_scatterplot(self):
         self.graph.create_scatterplot(self.fig, self.ax)
         self.fig_canvas.draw()
-
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.title("Board game recommender")
-    root.geometry("800x810")
-
-    app = App(root)
-    root.mainloop()
