@@ -51,8 +51,13 @@ The application is designed with two main classes: `Data` and `Graph`.
 ![UML diagram](C:\Users\Win10\Desktop\Recommender_board_game\boardgames_sequence_diagram.png)
 
 ## Design Patterns Used
-The application doesn't explicitly use any specific design pattern, but it does follow good object-oriented programming practices by encapsulating data manipulation and visualization logic within separate classes.
-I don't sure is it count as MVC pattern (Model–view–controller)
+The application is structured based on the MVC pattern, featuring three main components:
+
+1.Model (Data Class): This component corresponds to all the data-related logic that the user works with. The Data class is responsible for loading the board game data from a CSV file, filtering the data based on the user's preferences, and fetching specific game details.
+
+2.View (App Class): This is the visualization of the data, i.e., the GUI. The App class creates and manages the GUI, offering a user-friendly interface for users to input their preferences and view the recommended games or data visualizations.
+
+3.Controller (Graph Classes): Graph class uses the data from the Model to create different types of data visualizations (histogram, boxplot, scatterplot, bar chart), which are then displayed in the View.
 
 ## Graph Algorithm Used
 This application utilizes network graphs to establish connections between board game designers and game categories. Each node in the graph represents either a designer or a category, with an edge between a designer and a category indicating that the designer has created a game within that category.
